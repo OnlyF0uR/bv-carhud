@@ -1,6 +1,6 @@
 -- ========================================
 -- Some config values
-local seatbeltEjectSpeed = 45.0 -- Speed threshold to eject player (MPH)
+local seatbeltEjectSpeed = 45.0  -- Speed threshold to eject player (MPH)
 local seatbeltEjectAccel = 100.0 -- Acceleration threshold to eject player (G's)
 
 -- ========================================
@@ -183,7 +183,8 @@ end)
 
 function turning(pVehicle, pToggle, pDefaultHandlingValue)
     if pVehicle ~= 0 then
-        SetVehicleHandlingFloat(pVehicle, 'CHandlingData', 'fSteeringLock', (pToggle and pDefaultHandlingValue or (pDefaultHandlingValue / 4)))
+        SetVehicleHandlingFloat(pVehicle, 'CHandlingData', 'fSteeringLock',
+            (pToggle and pDefaultHandlingValue or (pDefaultHandlingValue / 4)))
     end
 end
 
@@ -295,7 +296,7 @@ Citizen.CreateThread(function()
                     local vehIsMovingFwd = GetEntitySpeedVector(vehicle, true).y > 1.0
                     local vehAcc = (prevSpeed - currSpeed) / GetFrameTime()
                     if (vehIsMovingFwd and (prevSpeed > (seatbeltEjectSpeed / 2.237)) and
-                        (vehAcc > (seatbeltEjectAccel * 9.81))) then
+                            (vehAcc > (seatbeltEjectAccel * 9.81))) then
                         local position = GetEntityCoords(player)
                         SetEntityCoords(player, position.x, position.y, position.z - 0.47, true, true, true)
                         SetEntityVelocity(player, prevVelocity.x, prevVelocity.y, prevVelocity.z)
@@ -313,7 +314,6 @@ Citizen.CreateThread(function()
                     DisableControlAction(0, 75)
                 end
             end
-            
         else
             -- Reset states when not in car
             pedInVeh = false
@@ -337,6 +337,10 @@ AddEventHandler("timeheader", function(h, m)
         m = "0" .. m
     end
     time = h .. ":" .. m
+end)
+
+exports('HasSeatbeltOn', function()
+    return seatbeltIsOn
 end)
 
 -- ========================================
@@ -429,7 +433,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-local imageWidth = 100 -- leave this variable, related to pixel size of the directions
+local imageWidth = 100     -- leave this variable, related to pixel size of the directions
 local containerWidth = 100 -- width of the image container
 
 -- local width =  (imageWidth / containerWidth) * 100; -- used to convert image width if changed
@@ -470,7 +474,8 @@ Citizen.CreateThread(function()
                 if (GetPedInVehicleSeat(vehicle, -1) == ped) then
                     if enableCruise then
                         -- turning off
-                        SetEntityMaxSpeed(vehicle, GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDriveMaxFlatVel"))
+                        SetEntityMaxSpeed(vehicle,
+                            GetVehicleHandlingFloat(vehicle, "CHandlingData", "fInitialDriveMaxFlatVel"))
                         exports['mythic_notify']:SendAlert('inform', 'Limiter is now turned off.')
                         enableCruise = false
                     else
@@ -478,7 +483,8 @@ Citizen.CreateThread(function()
                         local speed = GetEntitySpeed(vehicle)
 
                         SetEntityMaxSpeed(vehicle, speed)
-                        exports['mythic_notify']:SendAlert('inform', 'Limiter is now set to:' .. math.floor(speed * 3.6) .. ' km/h.')
+                        exports['mythic_notify']:SendAlert('inform',
+                            'Limiter is now set to:' .. math.floor(speed * 3.6) .. ' km/h.')
                         enableCruise = true
                     end
                 end
