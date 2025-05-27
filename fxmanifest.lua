@@ -10,3 +10,5 @@ ui_page 'html/ui.html'
 files {
 	'html/*'
 }
+
+dependency 'bv-core'

@@ -1,3 +1,5 @@
+Core = exports['bv-core']:GetCoreObject()
+
 -- ========================================
 -- Some config values
 local seatbeltEjectSpeed = 45.0  -- Speed threshold to eject player (MPH)
@@ -258,8 +260,9 @@ Citizen.CreateThread(function()
 
             local vehicleClass = GetVehicleClass(vehicle)
             if pedInVeh then
-                -- Check for bike, bicycle and emergency bike
-                if vehicleClass == 8 or vehicleClass == 13 or exports["bv-cars"]:GetCarClass(vehicle) == 'b_emergency' then
+                -- Check for bike, bicycle
+                -- TODO: Add emergency bike support
+                if vehicleClass == 8 or vehicleClass == 13 then
                     if not seatbeltIsOn then
                         seatbeltIsOn = true
                     end
@@ -274,7 +277,8 @@ Citizen.CreateThread(function()
                 SetPedConfigFlag(player, 32, true)
 
                 if IsControlJustReleased(0, 183) then
-                    if exports["bv-cars"]:HasHarness(vehicle) then
+                    -- get name of vehicle model
+                    if Core.Functions.HasVehicleHarness(vehicle) then
                         harness(vehicle)
                     else
                         if seatbeltIsOn then
