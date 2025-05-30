@@ -196,6 +196,9 @@ function harness(currentVehicle)
     turning(currentVehicle, false, defaultSteering)
 
     if seatbeltIsOn then
+        -- Disable getting out of the vehicle
+        DisableControlAction(0, 75, true)
+        DisableControlAction(0, 23, true) -- Disable exit vehicle
         -- Taking of harnass
         TriggerEvent("mythic_progbar:client:progress", {
             name = "carhud",
@@ -253,7 +256,7 @@ Citizen.CreateThread(function()
         local vehicle = GetVehiclePedIsIn(player, false)
 
         -- Set vehicle states
-        if IsPedInAnyVehicle(player, false) then
+        if IsPedInAnyVehicle(player, true) then
             pedInVeh = true
             -- Set the sleep to 5 instead of the default (2000)
             sleep = 5
@@ -315,7 +318,8 @@ Citizen.CreateThread(function()
                     end
                 else
                     -- Disable vehicle exit when seatbelt is on
-                    DisableControlAction(0, 75)
+                    DisableControlAction(0, 75, true)  -- Disable exit vehicle
+                    DisableControlAction(27, 75, true) -- Disable exit vehicle
                 end
             end
         else
@@ -345,6 +349,12 @@ end)
 
 exports('HasSeatbeltOn', function()
     return seatbeltIsOn
+end)
+
+exports('SetSeatbeltOn', function(value)
+    if value ~= nil then
+        seatbeltIsOn = value
+    end
 end)
 
 -- ========================================
